@@ -82,7 +82,7 @@ myTerminal      = "terminal"
 
 -- Width of the window border in pixels.
 --
-myBorderWidth   = 1
+myBorderWidth   = 2
 
 -- modMask lets you specify which modkey you want to use. The default
 -- is mod1Mask ("left alt").  You may also consider using mod3Mask
@@ -148,73 +148,77 @@ myEZKeys = [
 
              ("M-u",    spawn "browser")
             ,("M-S-u",  spawn "browser `xsel -o`")
-            ,("M-y y",  spawn "myscrot")
-            ,("M-y f",  spawn "myscrot -u")
-            ,("M-y u",  spawn "myscrot -u")
-            ,("M-y s",  spawn "myscrot -s")
+            ,("M-y M-y",  spawn "myscrot")
+            ,("M-y M-f",  spawn "myscrot -u")
+            ,("M-y M-u",  spawn "myscrot -u")
+            ,("M-y M-s",  spawn "myscrot -s")
+            ,("M-z M-z", kill)
              -- Run Programs Mod+R
 
-            ,("M-r b", spawn "browser")
-            ,("M-r g", spawn "gimp") 
-            ,("M-r c", spawn "oocalc") 
-            ,("M-r e", spawn "evince") 
-            ,("M-r t", spawn "tkabber") 
-            ,("M-r f", spawn "fbreader") 
-            ,("M-r m", spawn "comix") 
-            ,("M-r l", spawn "calc") 
-            ,("M-r s", spawn "skype") 
-            ,("M-r p", spawn "pidgin") 
-            ,("M-r r", spawn "mirage") 
-            ,("M-r w", spawn "oowriter") 
-            ,("M-r v", spawn "VirtualBox")
-            ,("M-r a", spawn "gksu mega")
-            ,("M-r <CR>", spawn "mygmrun")
-            ,("M-r h", spawn "hotkey.py")
-            ,("M-r q", spawn "gucharmap")
-            ,("M-r x", spawn "terminal -e screen -Rx viator")
+            ,("M-r M-b", spawn "browser")
+            ,("M-r M-g", spawn "gimp") 
+            ,("M-r M-c", spawn "oocalc") 
+            ,("M-r M-e", spawn "evince") 
+            ,("M-r M-t", spawn "tkabber") 
+            ,("M-r M-f", spawn "fbreader") 
+            ,("M-r M-m", spawn "comix") 
+            ,("M-r M-l", spawn "calc") 
+            ,("M-r M-s", spawn "skype") 
+            ,("M-r M-p", spawn "pidgin") 
+            ,("M-r M-r", spawn "mygmrun") 
+            ,("M-r M-w", spawn "oowriter") 
+            ,("M-r M-v", spawn "VirtualBox")
+            ,("M-r M-a", spawn "gksu mega")
+            ,("M-r M-h", spawn "hotkey.py")
+            ,("M-r M-q", spawn "gucharmap")
+            ,("M-r M-x", spawn "terminal -e screen -Rx viator")
 
             -- 888888888888888 MOCP HOTKEYS 888888888888888 --
             -- Mod+S
 
-            , ("M-s j",     spawn "mocp --next")
-            , ("M-s k",     spawn "mocp --previous")
-            , ("M-s p",     spawn "mocp --toggle-pause")
-            , ("M-s s",     spawn "mocp --stop" )
-            , ("M-s l",     spawn "mocp --seek +10")
-            , ("M-s h",     spawn "mocp --seek -10")
-            , ("M-s 1",     spawn "industrial")
-            , ("M-s 2",     spawn "newage")
-            , ("M-s 3",     spawn "sky")
-            , ("M-s 4",     spawn "indradio")
-            , ("M-s 5",     spawn "psy")
+            , ("M-s M-j",     spawn "mocp --next")
+            , ("M-s M-k",     spawn "mocp --previous")
+            , ("M-s M-p",     spawn "mocp --toggle-pause")
+            , ("M-s M-s",     spawn "mocp --stop" )
+            , ("M-s M-l",     spawn "mocp --seek +10")
+            , ("M-s M-h",     spawn "mocp --seek -10")
+            , ("M-s M-1",     spawn "industrial")
+            , ("M-s M-2",     spawn "newage")
+            , ("M-s M-3",     spawn "sky")
+            , ("M-s M-4",     spawn "indradio")
+            , ("M-s M-5",     spawn "psy")
 
-            , ("M-a 1",     spawn "vplus")
-            , ("M-z 1",   spawn "vminus")
-            , ("M-a 2",     spawn "vplus2")
-            , ("M-z 2",   spawn "vminus2")
-            , ("M-a 3",     spawn "vplus3")
-            , ("M-z 3",   spawn "vminus3")
-            , ("M-a m",     spawn "mastermute")
-            , ("M-a f",     spawn "frontmute")
-            , ("M-a a",    spawn "terminal -e alsamixer")
+            , ("M-a M-q",     spawn "vplus")
+            , ("M-S-a M-S-q",   spawn "vminus")
+            , ("M-a M-w",     spawn "vplus2")
+            , ("M-S-a M-S-w",   spawn "vminus2")
+            , ("M-a M-e",     spawn "vplus3")
+            , ("M-S-a M-S-e",   spawn "vminus3")
+            , ("M-a M-m",     spawn "mastermute")
+            , ("M-a M-f",     spawn "frontmute")
+            , ("M-a M-a",    spawn "terminal -e alsamixer")
 
             -- Go To Layouts Keys --
 
             -- Horizontal orientation M-d ; Vertical Orientation M-f
-            , ("M-d s", sendMessage $ JumpToLayout "h_std") -- standard
-            , ("M-f s", sendMessage $ JumpToLayout "v_std")
-            , ("M-d t", sendMessage $ JumpToLayout "tabs") -- tabs
-            , ("M-d f", sendMessage $ JumpToLayout "full") -- full
-            , ("M-d 1", sendMessage $ JumpToLayout "h_tabs/2")    
-            , ("M-f 1", sendMessage $ JumpToLayout "v_tabs/2")    
-            , ("M-d 2", sendMessage $ JumpToLayout "tabs/h_std")
-            , ("M-f 2", sendMessage $ JumpToLayout "tabs/v_std")    
-            , ("M-d 3", sendMessage $ JumpToLayout "std/2")
-            , ("M-f r", sendMessage $ JumpToLayout "v_spir") -- spiral
-            , ("M-d r", sendMessage $ JumpToLayout "h_spir")
-            , ("M-d g", sendMessage $ JumpToLayout "gimp")
-            , ("M-d i", sendMessage $ JumpToLayout "IM")
-
+            , ("M-d M-s", sendMessage $ JumpToLayout "h_std") -- standard
+            , ("M-f M-s", sendMessage $ JumpToLayout "v_std")
+            , ("M-d M-t", sendMessage $ JumpToLayout "tabs") -- tabs
+            , ("M-d M-f", sendMessage $ JumpToLayout "full") -- full
+            , ("M-d M-1", sendMessage $ JumpToLayout "h_tabs/2")    
+            , ("M-f M-1", sendMessage $ JumpToLayout "v_tabs/2")    
+            , ("M-d M-2", sendMessage $ JumpToLayout "tabs/h_std")
+            , ("M-f M-2", sendMessage $ JumpToLayout "tabs/v_std")    
+            , ("M-d M-3", sendMessage $ JumpToLayout "std/2")
+            , ("M-f M-r", sendMessage $ JumpToLayout "v_spir") -- spiral
+            , ("M-d M-r", sendMessage $ JumpToLayout "h_spir")
+            , ("M-d M-g", sendMessage $ JumpToLayout "gimp")
+            , ("M-d M-i", sendMessage $ JumpToLayout "IM")
+            , ("M-d M-a", sendMessage $ JumpToLayout "all")
+            , ("M-f M-f", sendMessage $ JumpToLayout "full")
+            , ("M-d M-d", sendMessage $ JumpToLayout "all")
+            , ("M-S-f M-S-f", sendMessage $ JumpToLayout "all")
+            , ("M-S-d M-S-d", sendMessage $ JumpToLayout "full")
            ]
 
 
@@ -336,10 +340,10 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     -- TODO, update this binding with avoidStruts , ((modMask              , xK_b     ),
 
     -- Quit xmonad
-    , ((modMask .|. shiftMask, xK_q     ), io (exitWith ExitSuccess))
+    , ((modMask .|. shiftMask, xK_Escape     ), io (exitWith ExitSuccess))
 
     -- Restart xmonad
-    , ((modMask              , xK_q     ), restart "xmonad" True)
+    , ((modMask              , xK_Escape     ), restart "xmonad" True)
 
     ]
     ++
@@ -422,9 +426,10 @@ myTabConfig = defaultTheme { {-activeColor            = "#555753"-}
 
 myTabs = tabbed shrinkText myTabConfig
 
-myLayout = smartBorders $ named "tabs/v_std" ltvtx ||| named "v_std" lvta ||| named "h_std" lhta ||| named "tabs" myTabs ||| named "full" myfull ||| named "v_tabs/2" ltvtz ||| named "h_tabs/2" lthtz ||| named "tabs/h_std" lthtx |||  named "v_spir" myspiral ||| named "h_spir" hmyspiral ||| named "std/2" lthtd ||| named "gimp" lgimp ||| named "IM" im
+myLayout = smartBorders $ named "all" all ||| named "v_std" lvta ||| named "h_std" lhta ||| named "tabs" myTabs ||| named "full" myfull ||| named "v_tabs/2" ltvtz ||| named "h_tabs/2" lthtz ||| named "tabs/h_std" lthtx |||  named "v_spir" myspiral ||| named "h_spir" hmyspiral ||| named "std/2" lthtd ||| named "gimp" lgimp ||| named "IM" im ||| named "tabs/v_std" ltvtx
   where
-    lvta = Tall 1 (3/100) (1/2)  
+    lvta = Tall 1 (3/100) (1/2)
+    all  = Tall 0 (3/100) (1/2)
     lhta = Mirror $ Tall 1 (3/100) (1/2)
     myfull = Full
     myspiral = spiral (6/7)
@@ -511,7 +516,7 @@ myFloatsHook = composeAll . concat $
     , [title =? t          --> doFloat | t <- myOtherFloats]
     ]
     where
-      myFloats = ["MPlayer", "Nitrogen", "Sonata", "Wine", "Gnome-alsamixer", "net-sourceforge-jnlp-runtime-Boot", "lxpanel", "xmessage", "Xmessage"]
+      myFloats = ["feh", "MPlayer", "Nitrogen", "Sonata", "Wine", "Gnome-alsamixer", "net-sourceforge-jnlp-runtime-Boot", "lxpanel", "xmessage", "Xmessage"]
       myOtherFloats = ["Python Menu","Downloads", "Firefox Preferences", "Save As...", "Send file", "Open", "File Transfers", "Chromium Options", "HotKey", "Xmessage"]
 
 -- Сделать меню плавающими
