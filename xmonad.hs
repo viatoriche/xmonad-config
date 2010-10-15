@@ -54,7 +54,18 @@ import XMonad.Util.Run
 
 import XMonad.Layout.LayoutModifier
 
+import XMonad.Layout.Circle
+import XMonad.Layout.AutoMaster
+import XMonad.Layout.Grid
+import XMonad.Layout.IM
+import Data.Ratio ((%))
+import XMonad.Layout.TwoPane
 
+{-myKawaiiLayout = Circle-}
+{-myKawaiiLayout = autoMaster 1 (1/100) Full-}
+
+
+myKawaiiLayout = TwoPane (3/100) (1/2)
 
 -- Взять значение свойства окна
 getProp :: Atom -> Window -> X (Maybe [CLong])
@@ -119,8 +130,8 @@ myWorkspaces    = ["1","2","3","4","5","6","7","8","9"]
 
 -- Border colors for unfocused and focused windows, respectively.
 --
-myNormalBorderColor  = "#222222"
-myFocusedBorderColor = "#babdb6"
+myNormalBorderColor  = "#000000"
+myFocusedBorderColor = "#FFFFFF"
 
 ------------------------------------------------------------------------
 -- Key bindings. Add, modify or remove key bindings here.
@@ -199,26 +210,28 @@ myEZKeys = [
             , ("M-a M-a",    spawn "terminal -e alsamixer")
 
             -- Go To Layouts Keys --
-
+{-myLayout = smartBorders $ named "all" all ||| named "all/2" all_2 ||| named "v_std" lvta ||| named "h_std" lhta ||| named "tabs" myTabs ||| named "full" myfull ||| named "v_tabs/2" ltvtz ||| named "h_tabs/2" lthtz ||| named "v_spir" myspiral ||| named "h_spir" hmyspiral ||| named "std/2" lthtd ||| named "gimp" lgimp ||| named "IM" im-}
+ 
             -- Horizontal orientation M-d ; Vertical Orientation M-f
             , ("M-d M-s", sendMessage $ JumpToLayout "h_std") -- standard
             , ("M-f M-s", sendMessage $ JumpToLayout "v_std")
             , ("M-d M-t", sendMessage $ JumpToLayout "tabs") -- tabs
-            , ("M-d M-f", sendMessage $ JumpToLayout "full") -- full
-            , ("M-d M-1", sendMessage $ JumpToLayout "h_tabs/2")    
-            , ("M-f M-1", sendMessage $ JumpToLayout "v_tabs/2")    
-            , ("M-d M-2", sendMessage $ JumpToLayout "tabs/h_std")
-            , ("M-f M-2", sendMessage $ JumpToLayout "tabs/v_std")    
+            , ("M-d M-f", sendMessage $ JumpToLayout "Full") -- full
+            , ("M-d M-1", sendMessage $ JumpToLayout "h_tabs/2")   
+            , ("M-f M-1", sendMessage $ JumpToLayout "v_tabs/2")   
+            {-, ("M-d M-2", sendMessage $ JumpToLayout "tabs/h_std")-}
+            {-, ("M-f M-2", sendMessage $ JumpToLayout "tabs/v_std")    -}
             , ("M-d M-3", sendMessage $ JumpToLayout "std/2")
             , ("M-f M-r", sendMessage $ JumpToLayout "v_spir") -- spiral
             , ("M-d M-r", sendMessage $ JumpToLayout "h_spir")
             , ("M-d M-g", sendMessage $ JumpToLayout "gimp")
             , ("M-d M-i", sendMessage $ JumpToLayout "IM")
             , ("M-d M-a", sendMessage $ JumpToLayout "all")
-            , ("M-f M-f", sendMessage $ JumpToLayout "full")
+            , ("M-f M-f", sendMessage $ JumpToLayout "Full")
             , ("M-d M-d", sendMessage $ JumpToLayout "all")
             , ("M-S-f M-S-f", sendMessage $ JumpToLayout "all")
-            , ("M-S-d M-S-d", sendMessage $ JumpToLayout "full")
+            , ("M-S-d M-S-d", sendMessage $ JumpToLayout "Full")
+            , ("M-d M-c", sendMessage $ JumpToLayout "test")
            ]
 
 
@@ -267,10 +280,14 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     , ((modMask .|. mod1Mask .|. shiftMask,   xK_j ), sendMessage $ Move D)
 
 
-    , ((modMask,   xK_Page_Down ), withFocused (keysResizeWindow (25,15) (0,0)))
-
-    , ((modMask,   xK_Page_Up ), withFocused (keysResizeWindow (-15,-15) (0,0)))
-
+    , ((modMask .|. shiftMask,   xK_Left), withFocused (keysResizeWindow (-20,0) (0,0)))
+    , ((modMask .|. shiftMask,   xK_Right), withFocused (keysResizeWindow (20,0) (0,0)))
+    , ((modMask .|. shiftMask,   xK_Up), withFocused (keysResizeWindow  (0,-20) (0,0)))
+    , ((modMask .|. shiftMask,   xK_Down), withFocused (keysResizeWindow (0,20) (0,0)))
+    , ((modMask,   xK_Left ), withFocused (keysMoveWindow (-20,0)) )
+    , ((modMask,   xK_Right ), withFocused (keysMoveWindow (20,0)) )
+    , ((modMask,   xK_Up ), withFocused (keysMoveWindow (0,-20)) )
+    , ((modMask,   xK_Down ), withFocused (keysMoveWindow (0,20)) )
 
 --    , ((modMask,   xK_Page_Up ),  )
 
@@ -408,6 +425,11 @@ myMouseBindings (XConfig {XMonad.modMask = modMask}) = M.fromList $
 
 --  ["1br","2xm","3fm","4cd","5mm","6tr","7vr","8gm","9gv"]
 --
+--
+--
+
+
+
 myTabConfig = defaultTheme { {-activeColor            = "#555753"-}
                             activeColor            = "#2e3436"
                             {-,inactiveColor          = "#40413f"-}
@@ -426,14 +448,13 @@ myTabConfig = defaultTheme { {-activeColor            = "#555753"-}
 
 myTabs = tabbed shrinkText myTabConfig
 
-myLayout = smartBorders $ named "all" all ||| named "v_std" lvta ||| named "h_std" lhta ||| named "tabs" myTabs ||| named "full" myfull ||| named "v_tabs/2" ltvtz ||| named "h_tabs/2" lthtz ||| named "tabs/h_std" lthtx |||  named "v_spir" myspiral ||| named "h_spir" hmyspiral ||| named "std/2" lthtd ||| named "gimp" lgimp ||| named "IM" im ||| named "tabs/v_std" ltvtx
+myLayout = smartBorders $ named "all" all ||| named "v_std" lvta ||| named "h_std" lhta ||| named "tabs" myTabs ||| named "Full" Full ||| named "v_tabs/2" ltvtz ||| named "h_tabs/2" lthtz ||| named "v_spir" myspiral ||| named "h_spir" hmyspiral ||| named "std/2" lthtd ||| named "gimp" lgimp ||| named "IM" tim  ||| named "test" myKawaiiLayout
   where
     lvta = Tall 1 (3/100) (1/2)
-    all  = Tall 0 (3/100) (1/2)
     lhta = Mirror $ Tall 1 (3/100) (1/2)
-    myfull = Full
     myspiral = spiral (6/7)
     hmyspiral = Mirror $ spiral (6/7)
+    all = GridRatio (16/9)
     ltvtz = windowNavigation (main *||* other)
                where
                  main =  myTabs
@@ -442,28 +463,16 @@ myLayout = smartBorders $ named "all" all ||| named "v_std" lvta ||| named "h_st
                where
                  main = myTabs
                  other = myTabs
-    ltvtx = windowNavigation (main *||* other)
-               where
-                 main = myTabs
-                 other = Tall 0 (3/100) (1/2)
-    lthtx = windowNavigation (main *//* other)
-               where
-                 main = myTabs
-                 other = Mirror $ Tall 0 (3/100) (1/2)
     lthtd = windowNavigation (main *//* other)
                where
                  main = Tall 1 (3/100) (1/2)
                  other =  Tall 1 (3/100) (1/2)
-    lgimp = windowNavigation (main ****||* other)
-               where
-                 main =  myTabs
-                 other = myTabs
-    im =      windowNavigation (t_w **||* main *||* rst)
-               where
-                 main  = Tall 0 (3/100) (1/2)
-                 t_w = myTabs
-                 rst = Tall 0 (3/100) (1/2)
-
+    lgimp = withIM (0.11) (Role "gimp-toolbox") $
+            reflectHoriz $
+            withIM (0.15) (Role "gimp-dock") myTabs
+    tim =  withIM (0.16) (ClassName "Tkabber") $
+            reflectHoriz $
+            withIM (0.15) (Role "MainWindow") $ Grid
 
 ------------------------------------------------------------------------
 -- Window rules:
