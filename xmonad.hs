@@ -57,15 +57,20 @@ import XMonad.Layout.LayoutModifier
 import XMonad.Layout.Circle
 import XMonad.Layout.AutoMaster
 import XMonad.Layout.Grid
+{-import myGrid-}
 import XMonad.Layout.IM
 import Data.Ratio ((%))
 import XMonad.Layout.TwoPane
-
+import XMonad.Layout.CenteredMaster
+import XMonad.Layout.ShowWName
+import XMonad.Layout.Roledex
+{-import XMonad.Layout.Grid-}
 {-myKawaiiLayout = Circle-}
 {-myKawaiiLayout = autoMaster 1 (1/100) Full-}
 
 
-myKawaiiLayout = TwoPane (3/100) (1/2)
+myKawaiiLayout = Roledex
+
 
 -- Взять значение свойства окна
 getProp :: Atom -> Window -> X (Maybe [CLong])
@@ -83,9 +88,7 @@ checkAtom name value = ask >>= \w -> liftX $ do
 checkDialog = checkAtom "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_DIALOG"
 checkMenu = checkAtom "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_MENU"
 checkFullState = checkAtom "_NET_WM_STATE" "_NET_WM_STATE_FULLSCREEN"
-
-
-
+{-checkGimpDock = checkAtom "WM_WINDOW_ROLE(STRING" "gimp-dock"-}
 -- The preferred terminal program, which is used in a binding below and by
 -- certain contrib modules.
 --
@@ -226,6 +229,7 @@ myEZKeys = [
             , ("M-d M-r", sendMessage $ JumpToLayout "h_spir")
             , ("M-d M-g", sendMessage $ JumpToLayout "gimp")
             , ("M-d M-i", sendMessage $ JumpToLayout "IM")
+            , ("M-S-d M-S-i", sendMessage $ JumpToLayout "IMT")
             , ("M-d M-a", sendMessage $ JumpToLayout "all")
             , ("M-f M-f", sendMessage $ JumpToLayout "Full")
             , ("M-d M-d", sendMessage $ JumpToLayout "all")
@@ -389,18 +393,22 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
 myMouseBindings (XConfig {XMonad.modMask = modMask}) = M.fromList $
 
     -- mod-button1, Set the window to floating mode and move by dragging
-    [ ((modMask, button1), (\w -> focus w >> mouseMoveWindow w))
+    [ ((shiftMask .|. modMask, button1), (\w -> focus w >> mouseMoveWindow w))
 
     -- mod-button2, Raise the window to the top of the stack
-    , ((modMask, button2), (\w -> focus w >> windows W.swapMaster))
+    , ((modMask, button1), (\w -> focus w >> windows W.swapMaster))
 
     -- mod-button3, Set the window to floating mode and resize by dragging
     , ((modMask, button3), (\w -> focus w >> mouseResizeWindow w))
 
     -- you may also bind events to the mouse scroll wheel (button4 and button5)
-    , ((modMask, button4), (\w -> prevWS ))
+    , ((shiftMask .|. mod1Mask .|. modMask, button4), (\w -> prevWS ))
+    , ((shiftMask .|. mod1Mask .|. modMask, button5), (\w -> nextWS ))
 
-    , ((modMask, button5), (\w -> nextWS ))
+    , ((modMask, button4), (\w -> windows W.focusUp ))
+    , ((modMask, button5), (\w -> windows W.focusDown ))
+    , ((shiftMask .|. modMask, button4), (\w -> windows W.swapUp ))
+    , ((shiftMask .|. modMask, button5), (\w -> windows W.swapDown ))
     ]
 
 ------------------------------------------------------------------------
@@ -425,10 +433,8 @@ myMouseBindings (XConfig {XMonad.modMask = modMask}) = M.fromList $
 
 --  ["1br","2xm","3fm","4cd","5mm","6tr","7vr","8gm","9gv"]
 --
+-- gimp-dock, gimp-image-window, gimp-toolbox
 --
---
-
-
 
 myTabConfig = defaultTheme { {-activeColor            = "#555753"-}
                             activeColor            = "#2e3436"
@@ -442,19 +448,22 @@ myTabConfig = defaultTheme { {-activeColor            = "#555753"-}
                             ,urgentColor            = "#555753"
                             ,urgentBorderColor      = "#969894"
                             ,urgentTextColor        = "#babdb6"
-                            ,fontName               = "xft:Terminus-12"
+                            ,fontName               = "xft:Terminus-10"
                             ,decoHeight             = 18
                            }
 
 myTabs = tabbed shrinkText myTabConfig
-
-myLayout = smartBorders $ named "all" all ||| named "v_std" lvta ||| named "h_std" lhta ||| named "tabs" myTabs ||| named "Full" Full ||| named "v_tabs/2" ltvtz ||| named "h_tabs/2" lthtz ||| named "v_spir" myspiral ||| named "h_spir" hmyspiral ||| named "std/2" lthtd ||| named "gimp" lgimp ||| named "IM" tim  ||| named "test" myKawaiiLayout
+myGrid = GridRatio (16/9)
+nim = autoMaster 2 (3/100) Grid
+{-nim = myTabs-}
+myTrueLayout = named "all" all ||| named "v_std" lvta ||| named "h_std" lhta ||| named "tabs" myTabs ||| named "Full" Full ||| named "v_tabs/2" ltvtz ||| named "h_tabs/2" lthtz ||| named "v_spir" myspiral ||| named "h_spir" hmyspiral ||| named "std/2" lthtd ||| named "gimp" lgimp ||| named "IM" tim ||| named "test" myKawaiiLayout
   where
     lvta = Tall 1 (3/100) (1/2)
     lhta = Mirror $ Tall 1 (3/100) (1/2)
     myspiral = spiral (6/7)
     hmyspiral = Mirror $ spiral (6/7)
     all = GridRatio (16/9)
+    nya = Mirror $ Tall 1 (3/100) (0.8)
     ltvtz = windowNavigation (main *||* other)
                where
                  main =  myTabs
@@ -467,13 +476,13 @@ myLayout = smartBorders $ named "all" all ||| named "v_std" lvta ||| named "h_st
                where
                  main = Tall 1 (3/100) (1/2)
                  other =  Tall 1 (3/100) (1/2)
-    lgimp = withIM (0.11) (Role "gimp-toolbox") $
+    tim =  withIM (0.1) (ClassName "Tkabber") nim
+    lgimp = withIM (0.17) (Role "gimp-toolbox") $
             reflectHoriz $
-            withIM (0.15) (Role "gimp-dock") myTabs
-    tim =  withIM (0.16) (ClassName "Tkabber") $
-            reflectHoriz $
-            withIM (0.15) (Role "MainWindow") $ Grid
+            withIM (0.20) (Title "Layers, Channels, Paths, Undo - FG/BG, Brushes, Patterns, Gradients") $ nya
 
+
+myLayout = smartBorders myTrueLayout
 ------------------------------------------------------------------------
 -- Window rules:
 
@@ -510,7 +519,7 @@ myManageHook = composeAll . concat $
       myIgnores = ["trayer", "fbpanel", "stalonetray"]
       myTitleIgnore = ["%^&%^"]
       xmpp = ["Tkabber","Dialog","Xchat","Skype", "Chat", "Pidgin"] --2
-      browsers = ["Shiretoko", "Firefox", "Opera", "Midori", "Chrome"] --1
+      browsers = ["Shiretoko", "Firefox", "Opera", "Midori", "Chrome", "Uzbl-core"] --1
       files = ["Gnome-commander", "dolphin", "Dolphin", "Krusader"] --3
       trueList = ["&^**^&"] --4
       media = ["Audacious", "MPlayer"] --5
@@ -542,7 +551,7 @@ manageFullState = checkFullState --> doFloat
 
 -- Whether focus follows the mouse pointer.
 myFocusFollowsMouse :: Bool
-myFocusFollowsMouse = False
+myFocusFollowsMouse = True
 
 
 ------------------------------------------------------------------------
